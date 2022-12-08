@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:translation_app/controllers/home_page_controller.dart';
+
+import '../widgets/translation_card.dart';
 
 class HomePage extends GetView<HomePageController> {
   const HomePage({Key? key}) : super(key: key);
@@ -8,6 +11,7 @@ class HomePage extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: controller.scaffoldKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         automaticallyImplyLeading: false,
@@ -16,8 +20,7 @@ class HomePage extends GetView<HomePageController> {
         ),
         elevation: 2,
       ),
-      body: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 15, 0),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
@@ -33,14 +36,23 @@ class HomePage extends GetView<HomePageController> {
                         onTap: controller.onTranslationSourceLanguagePressed,
                         child: Align(
                           alignment: const Alignment(-.9, 0),
-                          child: Obx(
-                            () => Text(
-                              controller.translateFromLanguage.value.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(color: Theme.of(context).primaryColor),
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(
+                                () => Text(
+                                  controller.sourceLanguage.value.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2!
+                                      .copyWith(color: Theme.of(context).primaryColor),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_drop_down_sharp,
+                                color: Theme.of(context).primaryColor,
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -55,14 +67,23 @@ class HomePage extends GetView<HomePageController> {
                         onTap: controller.onTranslationDestinationLanguagePressed,
                         child: Align(
                           alignment: const Alignment(.9, 0),
-                          child: Obx(
-                            () => Text(
-                              controller.translateToLanguage.value.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(color: Theme.of(context).primaryColor),
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Obx(
+                                () => Text(
+                                  controller.destinationLanguage.value.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2!
+                                      .copyWith(color: Theme.of(context).primaryColor),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_drop_down_sharp,
+                                color: Theme.of(context).primaryColor,
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -71,104 +92,70 @@ class HomePage extends GetView<HomePageController> {
                 ],
               ),
             ),
+            const Divider(
+              thickness: 1,
+              height: 0,
+            ),
             // if (FFAppState().isFirstResponseArrived)
-            Align(
-              alignment: const AlignmentDirectional(-1, 0),
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
-                child: Text(
-                  'translated Language: ',
-                  style: Theme.of(context).textTheme.bodyText1,
+            // Align(
+            //   alignment: const AlignmentDirectional(-1, 0),
+            //   child: Padding(
+            //     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
+            //     child: Text(
+            //       'translated Language: ',
+            //       style: Theme.of(context).textTheme.bodyText1,
+            //     ),
+            //   ),
+            // ),
+
+            /// Text to translate
+            Hero(
+              tag: 'text field',
+              child: GestureDetector(
+                onTap: controller.onTextFieldPressed,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(10, 5, 10, 60.sp),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: controller.textController,
+                            style: Theme.of(context).textTheme.bodyText1,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter Text',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                          child: Obx(
+                            () => controller.isTextFieldEmpty.value
+                                ? const SizedBox.shrink()
+                                : IconButton(
+                                    onPressed: controller.onClosePressed,
+                                    icon: const Icon(Icons.close),
+                                  ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
 
-            /// Text to translate
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              color: const Color(0xFFF5F5F5),
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 5),
-                child: TextFormField(
-                  controller: controller.textController,
-                  autofocus: true,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Text',
-                    hintStyle: Theme.of(context).textTheme.bodyText2,
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    errorBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    focusedErrorBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                  ),
-                  maxLines: 5,
-                  minLines: 1,
-                ),
-              ),
+            SizedBox(
+              height: 10.sp,
             ),
 
             /// translation
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              color: Theme.of(context).primaryColor,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Translation ',
-                    ),
-                    if (controller.translatedText != null)
-                      GetBuilder<HomePageController>(
-                        id: 'Traslation Text',
-                        builder: (_) {
-                          return Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                            child: Text(controller.translatedText!),
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
+            Obx(
+              () => controller.isTextFieldEmpty.value ? const SizedBox.shrink() : const TranslationCard(),
             ),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),

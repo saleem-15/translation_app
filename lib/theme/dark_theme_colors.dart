@@ -6,6 +6,8 @@ class DarkThemeColors {
   static const Color onPrimaryColor = Color(0xff1F222A);
   static const Color accentColor = Color(0xfffafafa);
 
+  static const Color hintColor = Colors.white60;
+  
   static const Color bodyTextColor = Colors.white70;
 
 }

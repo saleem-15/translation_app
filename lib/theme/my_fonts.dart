@@ -26,7 +26,7 @@ class MyFonts {
 
   // body font size
   static double get body1TextSize => 16.sp;
-  static double get body2TextSize => 14.sp;
+  static double get body2TextSize => 16.sp;
 
   static double get bodyLarge => 16.sp;
   static double get bodySmall => 10.sp;

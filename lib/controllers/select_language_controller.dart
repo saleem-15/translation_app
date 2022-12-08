@@ -10,10 +10,12 @@ class SelectLanguageController extends GetxController {
     required this.isSourceLanguage,
     required this.selectedLanguage,
   });
+  HomePageController get homePageController => Get.find<HomePageController>();
   final bool isSourceLanguage;
-  RxBool isSearchMode = false.obs;
-
   Language selectedLanguage;
+
+  RxBool isSearchMode = false.obs;
+  RxBool isLoading = false.obs;
 
   /// search field
   final FocusNode searchFocus = FocusNode();
@@ -30,10 +32,19 @@ class SelectLanguageController extends GetxController {
   }
 
   void onLanguageTapped(Language language) {
+    final isTwoLanguagesSimilar = checkIsSourceAndDestinationLanguageSimilar(language);
+
+    if (isTwoLanguagesSimilar) {
+      flipLanguages(language);
+      Get.back();
+
+      return;
+    }
+
     if (isSourceLanguage) {
-      Get.find<HomePageController>().setSourceLanguage(language);
+      homePageController.setSourceLanguage(language);
     } else {
-      Get.find<HomePageController>().setDestinationLanguage(language);
+      homePageController.setDestinationLanguage(language);
     }
 
     Get.back();
@@ -55,5 +66,31 @@ class SelectLanguageController extends GetxController {
     }
     final name = language.name.toLowerCase();
     return name.startsWith(searchText.toLowerCase());
+  }
+
+  bool checkIsSourceAndDestinationLanguageSimilar(Language language) {
+    if (isSourceLanguage) {
+      if (homePageController.destinationLanguage.value == language) {
+        return true;
+      }
+    }
+
+    if (!isSourceLanguage) {
+      if (homePageController.sourceLanguage.value == language) {
+        return true;
+      }
+    }
+    throw 'some error';
+  }
+
+  void flipLanguages(Language language) {
+    if (isSourceLanguage) {
+      homePageController.setDestinationLanguage(homePageController.sourceLanguage.value);
+      homePageController.setSourceLanguage(language);
+    }
+    if (!isSourceLanguage) {
+      homePageController.setSourceLanguage(homePageController.destinationLanguage.value);
+      homePageController.setDestinationLanguage(language);
+    }
   }
 }

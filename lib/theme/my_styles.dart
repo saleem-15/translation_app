@@ -5,8 +5,6 @@ import 'light_theme_colors.dart';
 import 'my_fonts.dart';
 
 class MyStyles {
-
-  
   ///text theme
   static TextTheme getTextTheme({required bool isLightTheme}) => TextTheme(
         button: MyFonts.buttonTextStyle.copyWith(fontSize: MyFonts.buttonTextSize),
@@ -21,5 +19,15 @@ class MyStyles {
           fontSize: MyFonts.body2TextSize,
           color: isLightTheme ? LightThemeColors.bodyTextColor : DarkThemeColors.bodyTextColor,
         ),
+      );
+
+  //Text Field
+  static getInputDecorationTheme({required bool isLightTheme}) =>  InputDecorationTheme(
+   hintStyle: getTextTheme(isLightTheme: isLightTheme).bodyText1!.copyWith(
+                  color: isLightTheme ? LightThemeColors.hintColor :DarkThemeColors.hintColor,
+                ),
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        border: InputBorder.none,
       );
 }
