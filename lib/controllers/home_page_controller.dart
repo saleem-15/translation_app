@@ -10,12 +10,14 @@ import '../services/translate_text_service.dart';
 class HomePageController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isTextFieldEmpty = true.obs;
+
   final textController = TextEditingController();
+  RxString text = ''.obs;
 
   final GlobalKey scaffoldKey = GlobalKey();
   String get textToTranslate => textController.text.trim();
 
-  String? translatedText;
+  RxnString translatedText = RxnString(null);
 
   Rx<Language> sourceLanguage = Language(name: 'English', code: 'en', nativeName: 'English').obs;
 
@@ -37,13 +39,12 @@ class HomePageController extends GetxController {
 
   Future<void> onTranslateButtonPressed() async {
     isLoading(true);
-    translatedText = await translateTextService(
+    translatedText.value = await translateTextService(
       textToTranslate: textToTranslate,
       fromLanguageCode: sourceLanguage.value.code,
       toLanguageCode: destinationLanguage.value.code,
     );
     isLoading(false);
-    update(['Traslation Text']);
   }
 
   void onTranslationSourceLanguagePressed() {
@@ -61,7 +62,7 @@ class HomePageController extends GetxController {
   }
 
   void onCopyButtonPressed() {
-    Clipboard.setData(ClipboardData(text: translatedText));
+    Clipboard.setData(ClipboardData(text: translatedText.value));
 
     showTranslationCopiedMessage();
   }
@@ -89,6 +90,8 @@ class HomePageController extends GetxController {
 
   void listenToTextFieldChanges() {
     textController.addListener(() {
+      text(textController.text);
+
       if (textController.text.isBlank!) {
         isTextFieldEmpty(true);
       } else {

@@ -35,19 +35,17 @@ class TranslationCard extends GetView<HomePageController> {
                         color: Colors.white,
                       ),
                 ),
-                if (controller.translatedText != null)
-                  GetBuilder<HomePageController>(
-                    id: 'Traslation Text',
-                    builder: (_) {
-                      return Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                        child: Text(
-                          controller.translatedText!,
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
-                        ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                  child: Obx(
+                    () {
+                      return Text(
+                        controller.translatedText.value ?? '',
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
                       );
                     },
                   ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

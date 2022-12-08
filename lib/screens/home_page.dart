@@ -96,17 +96,6 @@ class HomePage extends GetView<HomePageController> {
               thickness: 1,
               height: 0,
             ),
-            // if (FFAppState().isFirstResponseArrived)
-            // Align(
-            //   alignment: const AlignmentDirectional(-1, 0),
-            //   child: Padding(
-            //     padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
-            //     child: Text(
-            //       'translated Language: ',
-            //       style: Theme.of(context).textTheme.bodyText1,
-            //     ),
-            //   ),
-            // ),
 
             /// Text to translate
             Hero(
@@ -156,13 +145,6 @@ class HomePage extends GetView<HomePageController> {
             /// translation
             Obx(
               () => controller.isTextFieldEmpty.value ? const SizedBox.shrink() : const TranslationCard(),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
-              child: ElevatedButton(
-                onPressed: controller.onTranslateButtonPressed,
-                child: const Text('Translate'),
-              ),
             ),
           ],
         ),
